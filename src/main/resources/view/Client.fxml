@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="644.0" prefWidth="799.0" style="-fx-background-color: linear-gradient(to bottom right, #3498db, #8e44ad);" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.gdse.project.chatappfinalexam.cotroller.ClaintController">
+   <children>
+      <!-- Chat header with gradient background -->
+      <Pane layoutX="0.0" layoutY="0.0" prefHeight="80.0" prefWidth="800.0" style="-fx-background-color: rgba(255, 255, 255, 0.2); -fx-background-radius: 0 0 20 20;">
+         <effect>
+            <DropShadow color="#00000033" height="10.0" radius="4.5" width="10.0" />
+         </effect>
+         <children>
+            <Circle fx:id="userAvatar" centerX="50.0" centerY="40.0" fill="#1f93ff" radius="25.0" stroke="WHITE" strokeWidth="2.0" />
+            <Label fx:id="lblClientName" layoutX="90.0" layoutY="20.0" prefHeight="41.0" prefWidth="283.0" text="Client" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="32.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblStatus" layoutX="90.0" layoutY="55.0" text="Online" textFill="#b9f5b9">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER_RIGHT" layoutX="590.0" layoutY="20.0" prefHeight="40.0" prefWidth="180.0" spacing="15.0">
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 50%;">
+                     <graphic>
+                        <Label style="-fx-text-fill: white; -fx-font-size: 16px;" text="📞" />
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 50%;">
+                     <graphic>
+                        <Label style="-fx-text-fill: white; -fx-font-size: 16px;" text="📹" />
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 50%;">
+                     <graphic>
+                        <Label style="-fx-text-fill: white; -fx-font-size: 16px;" text="⚙️" />
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </Pane>
+
+      <!-- Chat content area with scroll pane for better message viewing -->
+      <ScrollPane fx:id="scrollPane" fitToWidth="true" layoutX="40.0" layoutY="100.0" prefHeight="350.0" prefWidth="720.0" style="-fx-background: transparent; -fx-background-color: transparent; -fx-padding: 10;">
+         <content>
+            <VBox fx:id="chatContainer" prefHeight="348.0" prefWidth="718.0" spacing="10.0" style="-fx-background-color: transparent;">
+               <children>
+                  <TextArea fx:id="txtArea" editable="false" prefHeight="348.0" prefWidth="718.0" style="-fx-background-color: rgba(255, 255, 255, 0.9); -fx-background-radius: 15; -fx-border-radius: 15;" wrapText="true">
+                     <effect>
+                        <DropShadow color="#00000040" height="5.0" radius="2.0" width="5.0" />
+                     </effect>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextArea>
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
+
+      <!-- Message input section with modern styling -->
+      <Pane layoutX="40.0" layoutY="541.0" prefHeight="80.0" prefWidth="720.0" style="-fx-background-color: rgba(255, 255, 255, 0.3); -fx-background-radius: 40; -fx-border-radius: 40;">
+         <effect>
+            <DropShadow color="#00000033" height="8.0" radius="3.5" width="8.0" />
+         </effect>
+         <children>
+            <TextField fx:id="txtField" layoutX="60.0" layoutY="18.0" prefHeight="43.0" prefWidth="480.0" promptText="Type a message..." style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-text-fill: white;">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </TextField>
+            <Button fx:id="btnFile" layoutX="15.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnFileOnAction" prefHeight="43.0" prefWidth="42.0" style="-fx-background-color: rgba(255, 255, 255, 0.2); -fx-background-radius: 50%; -fx-border-radius: 50%;">
+               <graphic>
+                  <Label style="-fx-text-fill: white; -fx-font-size: 24px;" text="+" />
+               </graphic>
+            </Button>
+            <Button fx:id="btnEmoji" layoutX="550.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnEmojiOnAction" prefHeight="43.0" prefWidth="42.0" style="-fx-background-color: rgba(255, 255, 255, 0.2); -fx-background-radius: 50%; -fx-border-radius: 50%;">
+               <graphic>
+                  <Label style="-fx-font-size: 18px;" text="😊" />
+               </graphic>
+            </Button>
+            <Button fx:id="btnSend" layoutX="620.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnSendOnAction" prefHeight="43.0" prefWidth="86.0" style="-fx-background-color: #2ecc71; -fx-background-radius: 20; -fx-text-fill: white;" text="Send">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+               <effect>
+                  <DropShadow color="#00000040" height="5.0" radius="2.0" width="5.0" />
+               </effect>
+            </Button>
+         </children>
+      </Pane>
+
+      <!-- Emoji selection panel with improved styling -->
+      <Pane fx:id="emojiPane" layoutX="510.0" layoutY="340.0" prefHeight="126.0" prefWidth="166.0" style="-fx-background-color: rgba(255, 255, 255, 0.95); -fx-background-radius: 15; -fx-border-radius: 15;" visible="false">
+         <effect>
+            <DropShadow color="#00000080" height="10.0" radius="4.5" width="10.0" />
+         </effect>
+         <children>
+            <Button layoutX="13.0" layoutY="17.0" mnemonicParsing="false" onAction="#btnSmileOnAction" prefHeight="43.0" prefWidth="42.0" style="-fx-background-color: transparent;" text="😊">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+            <Button layoutX="62.0" layoutY="17.0" mnemonicParsing="false" onAction="#btnLaughOnAction" prefHeight="43.0" prefWidth="42.0" style="-fx-background-color: transparent;" text="😂">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+            <Button layoutX="111.0" layoutY="17.0" mnemonicParsing="false" onAction="#btnHeartOnAction" prefHeight="43.0" prefWidth="42.0" style="-fx-background-color: transparent;" text="❤">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+            <Button layoutX="13.0" layoutY="66.0" mnemonicParsing="false" onAction="#btnCoolOnAction" prefHeight="43.0" prefWidth="42.0" style="-fx-background-color: transparent;" text="😎">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+            <Button layoutX="62.0" layoutY="66.0" mnemonicParsing="false" onAction="#btnCryOnAction" prefHeight="43.0" prefWidth="42.0" style="-fx-background-color: transparent;" text="😢">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+            <Button layoutX="111.0" layoutY="66.0" mnemonicParsing="false" onAction="#btnLikeOnAction" prefHeight="43.0" prefWidth="42.0" style="-fx-background-color: transparent;" text="👍">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+
+      <!-- Name input panel with improved styling -->
+      <Pane fx:id="namePane" layoutX="53.0" layoutY="451.0" prefHeight="80.0" prefWidth="535.0" style="-fx-background-color: rgba(255, 255, 255, 0.95); -fx-background-radius: 15; -fx-border-radius: 15;">
+         <effect>
+            <DropShadow color="#00000080" height="10.0" radius="4.5" width="10.0" />
+         </effect>
+         <children>
+            <Label alignment="CENTER" layoutX="28.0" layoutY="24.0" prefHeight="20.0" prefWidth="180.0" text="Enter your name" textFill="#3498db">
+               <font>
+                  <Font name="System Bold" size="22.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtName" layoutX="208.0" layoutY="16.0" onKeyPressed="#onKeyPressed" prefHeight="47.0" prefWidth="200.0" style="-fx-background-radius: 10; -fx-border-radius: 10;">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </TextField>
+            <Button layoutX="421.0" layoutY="25.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #3498db; -fx-background-radius: 15; -fx-text-fill: white;" text="Join Chat">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
