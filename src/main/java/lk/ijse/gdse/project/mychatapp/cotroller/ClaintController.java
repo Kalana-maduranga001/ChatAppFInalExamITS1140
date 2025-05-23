@@ -315,7 +315,7 @@ public class ClaintController implements Initializable {
                         "date - gives the current date\n" +
                         "uptime - give the uptime\n" +
                         "bye - quit";
-                return;
+                break;
             case "bye":
                 appendToChat("Disconnecting...");
                 disconnectFromServer();
