@@ -13,7 +13,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="644.0" prefWidth="799.0" style="-fx-background-color: linear-gradient(to bottom right, #3498db, #8e44ad);" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.gdse.project.chatappfinalexam.cotroller.ClaintController">
+<AnchorPane prefHeight="644.0" prefWidth="799.0" style="-fx-background-color: linear-gradient(to bottom right, #3498db, #8e44ad);" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.gdse.project.mychatapp.cotroller.ClaintController">
    <children>
       <!-- Chat header with gradient background -->
       <Pane layoutX="0.0" layoutY="0.0" prefHeight="80.0" prefWidth="800.0" style="-fx-background-color: rgba(255, 255, 255, 0.2); -fx-background-radius: 0 0 20 20;">
@@ -32,25 +32,32 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <HBox alignment="CENTER_RIGHT" layoutX="590.0" layoutY="20.0" prefHeight="40.0" prefWidth="180.0" spacing="15.0">
-               <children>
-                  <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 50%;">
-                     <graphic>
-                        <Label style="-fx-text-fill: white; -fx-font-size: 16px;" text="📞" />
-                     </graphic>
-                  </Button>
-                  <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 50%;">
-                     <graphic>
-                        <Label style="-fx-text-fill: white; -fx-font-size: 16px;" text="📹" />
-                     </graphic>
-                  </Button>
-                  <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 50%;">
-                     <graphic>
-                        <Label style="-fx-text-fill: white; -fx-font-size: 16px;" text="⚙️" />
-                     </graphic>
-                  </Button>
-               </children>
-            </HBox>
+            <HBox alignment="CENTER_RIGHT" layoutX="528.0" layoutY="20.0" prefHeight="40.0" prefWidth="242.0" spacing="15.0" />
+            <Button layoutX="672.0" layoutY="44.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #3498db; -fx-background-radius: 15; -fx-text-fill: white;" text="bye 🛅">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+            <Button layoutX="569.0" layoutY="44.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #3498db; -fx-background-radius: 15; -fx-text-fill: white;" text="uptime ⌚">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+            <Button layoutX="361.0" layoutY="44.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #3498db; -fx-background-radius: 15; -fx-text-fill: white;" text="time ⌛">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+            <Button layoutX="465.0" layoutY="44.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #3498db; -fx-background-radius: 15; -fx-text-fill: white;" text="date 📅">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="command" layoutX="522.0" layoutY="5.0" mnemonicParsing="false" onAction="#displayCommand" prefHeight="35.0" prefWidth="242.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 50%;">
+               <graphic>
+                  <Label fx:id="Command" prefHeight="25.0" prefWidth="206.0" style="-fx-text-fill: white; -fx-font-size: 16px;" text="Availabe Command  🔍🛂  " />
+               </graphic>
+            </Button>
          </children>
       </Pane>
 
@@ -144,7 +151,7 @@
       </Pane>
 
       <!-- Name input panel with improved styling -->
-      <Pane fx:id="namePane" layoutX="53.0" layoutY="451.0" prefHeight="80.0" prefWidth="535.0" style="-fx-background-color: rgba(255, 255, 255, 0.95); -fx-background-radius: 15; -fx-border-radius: 15;">
+      <Pane fx:id="namePane" layoutX="53.0" layoutY="451.0" prefHeight="80.0" prefWidth="675.0" style="-fx-background-color: rgba(255, 255, 255, 0.95); -fx-background-radius: 15; -fx-border-radius: 15;">
          <effect>
             <DropShadow color="#00000080" height="10.0" radius="4.5" width="10.0" />
          </effect>
@@ -154,12 +161,12 @@
                   <Font name="System Bold" size="22.0" />
                </font>
             </Label>
-            <TextField fx:id="txtName" layoutX="208.0" layoutY="16.0" onKeyPressed="#onKeyPressed" prefHeight="47.0" prefWidth="200.0" style="-fx-background-radius: 10; -fx-border-radius: 10;">
+            <TextField fx:id="txtName" layoutX="208.0" layoutY="16.0" onKeyPressed="#onKeyPressed" prefHeight="47.0" prefWidth="316.0" style="-fx-background-radius: 10; -fx-border-radius: 10;">
                <font>
                   <Font size="18.0" />
                </font>
             </TextField>
-            <Button layoutX="421.0" layoutY="25.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #3498db; -fx-background-radius: 15; -fx-text-fill: white;" text="Join Chat">
+            <Button layoutX="533.0" layoutY="25.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #3498db; -fx-background-radius: 15; -fx-text-fill: white;" text="Press Enter">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>

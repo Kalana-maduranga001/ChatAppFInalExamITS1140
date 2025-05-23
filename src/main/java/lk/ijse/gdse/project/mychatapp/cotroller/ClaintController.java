@@ -1,4 +1,4 @@
-package lk.ijse.gdse.project.chatappfinalexam.cotroller;
+package lk.ijse.gdse.project.mychatapp.cotroller;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -12,9 +12,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
-import java.io.*;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Files;
@@ -51,7 +54,11 @@ public class ClaintController implements Initializable {
     @FXML
     private TextField txtName;
 
-    // Client settings
+    @FXML
+    private Label Command;
+
+
+
     private final String HOST = "localhost";
     private final int PORT = 5000;
     private Socket socket;
@@ -60,21 +67,21 @@ public class ClaintController implements Initializable {
     private String username;
     private boolean connected = false;
 
-    // Base directory for file storage
+
     private final String FILE_STORAGE_DIR = "client_files/";
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Initialize the file storage directory
+// Initialize the file storage directory
         File directory = new File(FILE_STORAGE_DIR);
         if (!directory.exists()) {
             directory.mkdirs();
         }
 
-        // Hide emoji panel initially
+
         emojiPane.setVisible(false);
 
-        // Show name panel first, hide chat elements
+
         namePane.setVisible(true);
         txtArea.setVisible(false);
         txtField.setVisible(false);
@@ -82,7 +89,7 @@ public class ClaintController implements Initializable {
         btnEmoji.setVisible(false);
         btnFile.setVisible(false);
 
-        // Set up listener for Enter key in the name field
+// Set up listener for Enter key in the name field
         txtName.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 connectToServer();
@@ -93,6 +100,7 @@ public class ClaintController implements Initializable {
     /**
      * Attempts to connect to the server with the provided username
      */
+
     private void connectToServer() {
         username = txtName.getText().trim();
 
@@ -102,15 +110,15 @@ public class ClaintController implements Initializable {
         }
 
         try {
-            // Connect to server
+
             socket = new Socket(HOST, PORT);
             inputStream = new DataInputStream(socket.getInputStream());
             outputStream = new DataOutputStream(socket.getOutputStream());
 
-            // Send username to server
+
             outputStream.writeUTF(username);
 
-            // Update UI
+
             Platform.runLater(() -> {
                 namePane.setVisible(false);
                 txtArea.setVisible(true);
@@ -124,7 +132,7 @@ public class ClaintController implements Initializable {
 
             connected = true;
 
-            // Start message receiving thread
+
             new Thread(this::receiveMessages).start();
 
         } catch (IOException e) {
@@ -135,34 +143,35 @@ public class ClaintController implements Initializable {
     /**
      * Continuously listens for incoming messages from the server
      */
+
     private void receiveMessages() {
         try {
             while (connected) {
-                // Read message type
+
                 String messageType = inputStream.readUTF();
 
                 switch (messageType) {
                     case "TEXT":
-                        // Read text message
+
                         String message = inputStream.readUTF();
                         appendToChat(message);
                         break;
 
                     case "FILE":
-                        // Read file name
+
                         String fileName = inputStream.readUTF();
 
-                        // Read sender name
+
                         String sender = inputStream.readUTF();
 
-                        // Read file size
+
                         int fileSize = inputStream.readInt();
 
-                        // Read file data
+
                         byte[] fileData = new byte[fileSize];
                         inputStream.readFully(fileData);
 
-                        // Save file
+
                         File receivedFile = new File(FILE_STORAGE_DIR + fileName);
                         Files.write(receivedFile.toPath(), fileData);
 
@@ -193,7 +202,7 @@ public class ClaintController implements Initializable {
             if (outputStream != null) outputStream.close();
             if (socket != null && !socket.isClosed()) socket.close();
 
-            // Reset UI for reconnection
+
             Platform.runLater(() -> {
                 namePane.setVisible(true);
                 txtArea.setVisible(false);
@@ -211,7 +220,7 @@ public class ClaintController implements Initializable {
 
     /**
      * Appends a message to the chat area
-     * @param message The message to append
+     * message The message to append
      */
     private void appendToChat(String message) {
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
@@ -222,7 +231,7 @@ public class ClaintController implements Initializable {
 
     /**
      * Sends a text message to the server
-     * @param message The message to send
+     * message The message to send
      */
     private void sendMessage(String message) {
         if (!connected || message.trim().isEmpty()) return;
@@ -235,12 +244,15 @@ public class ClaintController implements Initializable {
         } catch (IOException e) {
             appendToChat("Failed to send message: " + e.getMessage());
         }
+
+        clientSendCommand(message);
     }
 
     /**
      * Sends a file to the server
-     * @param file The file to send
+     *  file The file to send
      */
+
     private void sendFile(File file) {
         if (!connected || file == null) return;
 
@@ -259,6 +271,7 @@ public class ClaintController implements Initializable {
         }
     }
 
+
     @FXML
     void btnCoolOnAction(ActionEvent event) {
         txtField.appendText("😎");
@@ -276,6 +289,47 @@ public class ClaintController implements Initializable {
         emojiPane.setVisible(!emojiPane.isVisible());
     }
 
+    /**
+     * client can send to command sever and response
+     *  sever send reply for client
+     */
+
+    public void clientSendCommand(String command) {
+        if (!connected || command == null || command.trim().isEmpty()) return;
+
+        command = command.trim().toLowerCase();
+        String response;
+
+        switch (command) {
+            case "time":
+                response = "Server time: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+                break;
+            case "date":
+                response = "Today's date: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                break;
+            case "uptime":
+                response = "Server uptime: 1 Time";
+                break;
+            case "help":
+                response = "time - gives the current time\n" +
+                        "date - gives the current date\n" +
+                        "uptime - give the uptime\n" +
+                        "bye - quit";
+                return;
+            case "bye":
+                appendToChat("Disconnecting...");
+                disconnectFromServer();
+                return;
+            default:
+                response = "Unknown command: " + command;
+        }
+
+        appendToChat(response);
+    }
+
+
+
+
     @FXML
     void btnFileOnAction(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -286,9 +340,9 @@ public class ClaintController implements Initializable {
             sendFile(file);
         }
 
-        // Hide emoji panel if it's open
         emojiPane.setVisible(false);
     }
+
 
     @FXML
     void btnHeartOnAction(ActionEvent event) {
@@ -308,15 +362,24 @@ public class ClaintController implements Initializable {
         emojiPane.setVisible(false);
     }
 
+
+    @FXML
+    void displayCommand(ActionEvent event) {
+
+    }
+
     @FXML
     void btnSendOnAction(ActionEvent event) {
         String message = txtField.getText().trim();
         if (!message.isEmpty()) {
-            sendMessage(message);
+            if (message.startsWith(">")) {
+                clientSendCommand(message.substring(1)); // Remove '>' and send as command
+            } else {
+                sendMessage(message);
+            }
             txtField.clear();
         }
 
-        // Hide emoji panel if it's open
         emojiPane.setVisible(false);
     }
 

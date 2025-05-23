@@ -1,4 +1,4 @@
-package lk.ijse.gdse.project.chatappfinalexam.cotroller;
+package lk.ijse.gdse.project.mychatapp.cotroller;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -15,19 +15,21 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-
-
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerController implements Initializable {
@@ -62,31 +64,31 @@ public class ServerController implements Initializable {
     @FXML
     private VBox userListVBox;
 
-    // Server settings
+                           // Server settings
     private final int PORT = 5000;
     private ServerSocket serverSocket;
 
-    // Map to store client handlers with their usernames
+                                        // Map to store client handlers with their usernames
     private Map<String, ClientHandler> clients = new ConcurrentHashMap<>();
 
-    // Base directory for file storage
+                                           // Base directory for file storage
     private final String FILE_STORAGE_DIR = "server_files/";
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Initialize the file storage directory
+                        // Initialize the file storage directory
         File directory = new File(FILE_STORAGE_DIR);
         if (!directory.exists()) {
             directory.mkdirs();
         }
 
-        // Hide emoji panel initially
+                     // Hide emoji panel initially
         emojiPane.setVisible(false);
 
-        // Start server in a separate thread
+                  // Start server in a separate thread
         new Thread(this::startServer).start();
 
-        // Set up event listener for Enter key in text field
+                   // Set up event listener for Enter key in text field
         txtField.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case ENTER:
@@ -96,9 +98,9 @@ public class ServerController implements Initializable {
         });
     }
 
-    /**
-     * Starts the server and listens for client connections
-     */
+                                /**
+                                 * Starts the server and listens for client connections
+                                 */
     private void startServer() {
         try {
             serverSocket = new ServerSocket(PORT);
@@ -110,14 +112,14 @@ public class ServerController implements Initializable {
             });
 
             while (true) {
-                // Wait for client connection
+
                 Socket clientSocket = serverSocket.accept();
 
-                // Create a data input stream to read client's username
+
                 DataInputStream inputStream = new DataInputStream(clientSocket.getInputStream());
                 String username = inputStream.readUTF();
 
-                // Create and start a new client handler
+
                 ClientHandler clientHandler = new ClientHandler(clientSocket, username);
                 clients.put(username, clientHandler);
                 new Thread(clientHandler).start();
@@ -127,7 +129,7 @@ public class ServerController implements Initializable {
                     updateConnectedClientsCount();
                     addUserToList(username);
 
-                    // Broadcast the new client connection to all clients
+
                     broadcast("SERVER: " + username + " has joined the chat.", null);
                 });
             }
@@ -151,7 +153,7 @@ public class ServerController implements Initializable {
 
     /**
      * Adds a user to the sidebar list
-     * @param username The username to add
+     *  username The username to add
      */
     private void addUserToList(String username) {
         HBox userBox = new HBox(10);
@@ -174,7 +176,7 @@ public class ServerController implements Initializable {
 
     /**
      * Removes a user from the sidebar list
-     * @param username The username to remove
+     *  username The username to remove
      */
     private void removeUserFromList(String username) {
         Platform.runLater(() -> {
@@ -190,7 +192,7 @@ public class ServerController implements Initializable {
 
     /**
      * Appends a message to the chat area
-     * @param message The message to append
+     *  The message to append
      */
     private void appendToChat(String message) {
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
@@ -201,9 +203,10 @@ public class ServerController implements Initializable {
 
     /**
      * Broadcasts a message to all connected clients
-     * @param message The message to broadcast
-     * @param excludeClient The client to exclude from broadcast (can be null)
+     *   The message to broadcast
+     *  The client to exclude from broadcast (can be null)
      */
+
     private void broadcast(String message, ClientHandler excludeClient) {
         for (ClientHandler client : clients.values()) {
             if (client != excludeClient) {
@@ -214,9 +217,9 @@ public class ServerController implements Initializable {
 
     /**
      * Broadcasts a file to all connected clients
-     * @param fileName The file name
-     * @param fileData The file data
-     * @param sender The client who sent the file
+     *  fileName The file name
+     *  fileData The file data
+     *  sender The client who sent the file
      */
     private void broadcastFile(String fileName, byte[] fileData, String sender) {
         for (ClientHandler client : clients.values()) {
@@ -239,6 +242,7 @@ public class ServerController implements Initializable {
             appendToChat("Error opening client window: " + e.getMessage());
         }
     }
+
 
     @FXML
     void btnCoolOnAction(ActionEvent event) {
@@ -269,14 +273,14 @@ public class ServerController implements Initializable {
                 String serverMessage = "SERVER: Sending file " + file.getName() + " to all clients";
                 appendToChat(serverMessage);
 
-                // Save file to server directory
+
                 File serverFile = new File(FILE_STORAGE_DIR + file.getName());
                 Files.write(serverFile.toPath(), fileData);
 
-                // Create a message for all clients about the file
+
                 broadcast("SERVER: Sending file: " + file.getName(), null);
 
-                // Send file to all clients
+
                 for (ClientHandler client : clients.values()) {
                     client.sendFile(file.getName(), fileData, "SERVER");
                 }
@@ -322,22 +326,21 @@ public class ServerController implements Initializable {
         emojiPane.setVisible(false);
     }
 
-    /**
-     * Closes the server socket and all client connections when the application exits
-     */
+
+
     public void shutdown() {
         try {
             broadcast("SERVER: Server is shutting down.", null);
 
-            // Close all client connections
+
             for (ClientHandler client : clients.values()) {
                 client.close();
             }
 
-            // Clear clients map
+
             clients.clear();
 
-            // Close server socket
+
             if (serverSocket != null && !serverSocket.isClosed()) {
                 serverSocket.close();
             }
@@ -346,9 +349,7 @@ public class ServerController implements Initializable {
         }
     }
 
-    /**
-     * Inner class to handle client connections
-     */
+
     private class ClientHandler implements Runnable {
         private Socket socket;
         private DataInputStream inputStream;
@@ -384,17 +385,17 @@ public class ServerController implements Initializable {
                             break;
 
                         case "FILE":
-                            // Read file name
+
                             String fileName = inputStream.readUTF();
 
-                            // Read file size
+
                             int fileSize = inputStream.readInt();
 
-                            // Read file data
+
                             byte[] fileData = new byte[fileSize];
                             inputStream.readFully(fileData);
 
-                            // Save file to server directory
+
                             File serverFile = new File(FILE_STORAGE_DIR + fileName);
                             Files.write(serverFile.toPath(), fileData);
 
@@ -402,13 +403,13 @@ public class ServerController implements Initializable {
                                 appendToChat(username + " sent a file: " + fileName);
                             });
 
-                            // Broadcast file to other clients
+
                             broadcastFile(fileName, fileData, username);
                             break;
                     }
                 }
             } catch (IOException e) {
-                // Handle client disconnection
+
                 Platform.runLater(() -> {
                     appendToChat(username + " disconnected: " + e.getMessage());
                     clients.remove(username);
@@ -421,10 +422,7 @@ public class ServerController implements Initializable {
             }
         }
 
-        /**
-         * Sends a text message to the client
-         * @param message The message to send
-         */
+
         public void sendMessage(String message) {
             try {
                 outputStream.writeUTF("TEXT");
@@ -435,12 +433,7 @@ public class ServerController implements Initializable {
             }
         }
 
-        /**
-         * Sends a file to the client
-         * @param fileName The file name
-         * @param fileData The file data
-         * @param sender The sender of the file
-         */
+
         public void sendFile(String fileName, byte[] fileData, String sender) {
             try {
                 outputStream.writeUTF("FILE");
@@ -454,9 +447,7 @@ public class ServerController implements Initializable {
             }
         }
 
-        /**
-         * Closes the client connection
-         */
+
         public void close() {
             running = false;
             try {
@@ -468,10 +459,7 @@ public class ServerController implements Initializable {
             }
         }
 
-        /**
-         * Gets the username of the client
-         * @return The username
-         */
+
         public String getUsername() {
             return username;
         }

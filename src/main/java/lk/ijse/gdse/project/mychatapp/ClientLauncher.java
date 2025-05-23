@@ -1,10 +1,10 @@
-package lk.ijse.gdse.project.chatappfinalexam;
+package lk.ijse.gdse.project.mychatapp;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import lk.ijse.gdse.project.chatappfinalexam.cotroller.ClaintController;
+import lk.ijse.gdse.project.mychatapp.cotroller.ClaintController;
 
 import java.io.IOException;
 
@@ -34,4 +34,6 @@ public class ClientLauncher extends Application {
     public static void main(String[] args) {
         launch();
     }
+
+
 }
